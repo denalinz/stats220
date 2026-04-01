@@ -89,3 +89,13 @@ ggplot(latest_data, aes(x = factor(rating))) +
   labs(title = "Perceived Influence Ratings", x = "Rating (1-5)", y = "Frequency") +
   theme_minimal()
 ```
+```{r}
+pets <- c("cat", "dog", "turtle", "rabbit")
+best_pet <- pets[1]
+
+```
+
+The best pet to have is a `r best_pet` of course!
+
+![](https://c.tenor.com/-qBsG1HwR4oAAAAC/tenor.gif)
+
