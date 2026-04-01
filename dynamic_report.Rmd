@@ -87,5 +87,5 @@ ggplot(latest_data, aes(x = fct_infreq(category))) +
 ggplot(latest_data, aes(x = factor(rating))) +
   geom_bar(fill = "#25f4ee") + 
   labs(title = "Perceived Influence Ratings", x = "Rating (1-5)", y = "Frequency") +
-  theme_light()
+  theme_minimal()
 ```
