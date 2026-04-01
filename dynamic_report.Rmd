@@ -1,0 +1,91 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+library(tidyverse)
+```
+
+```{css}
+/* Main Title / Level 1 Heading */
+h1 {
+  color: #FE2C55; /* TikTok Red */
+  font-weight: bold;
+  border-bottom: 4px solid #25F4EE; /* TikTok blue */
+}
+
+/* Level 2 Headings  */
+h2 {
+  color: #25F4EE; /* TikTok blue */
+  background-color: black ; /*  Black background for contrast */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Level 3 Headings */
+h3 {
+  color: #FE2C55;
+  border-left: 5px solid #25F4EE;
+  padding-left: 10px;
+}
+
+/* body text */
+body {
+  background-color: #FAFAFA;
+}
+
+/* Styling for dynamic comments */
+p {
+  font-size: 1.1em;
+  line-height: 1.6;
+}
+
+```
+
+# Analysing the effectiveness of sponsored TikTok ads
+
+
+```{r}
+csv_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDkiydyqd3RwMI_An2HE96a20Udv9tw4S2TsWMaQ13DwYLUP1eN1zg9qAczST2uyMLZb-4GJhcGgMW/pub?gid=1030280717&single=true&output=csv"
+logged_data <- read_csv(csv_url)
+
+latest_data <- logged_data %>%
+  rename(
+    category = 2,   
+    likes = 3,
+    rating = 4
+  ) %>%
+  mutate(category = str_remove(category, "\\s*\\(.*\\)"))
+
+# summary values
+avg_likes <- round(mean(latest_data$likes, na.rm = TRUE), 0)
+most_common <- latest_data %>% 
+  count(category) %>% 
+  arrange(desc(n)) %>% 
+  slice(1) %>% 
+  pull(category)
+```
+
+
+This dynamic report tracks advertisements observed on TikTok over a period of observations. By logging the ad category, engagement (likes), and personal influence, we can visualize how the TikTok algorithm targets content and which industries are most prevalent in the feed.
+
+### Engagement and Content Trends
+
+Across the data collected so far, the most frequent type of advertisement encountered is **`r most_common`**. On average, the advertisements in this sample have received approximately **`r avg_likes` likes**, indicating the scale of reach for these targeted campaigns.
+
+```{r}
+# Chart 1: Categories
+ggplot(latest_data, aes(x = fct_infreq(category))) +
+  geom_bar(fill = "#fe2c55") + 
+  labs(title = "Frequency of Ad Categories", x = "Category", y = "Count") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Chart 2: Influence
+ggplot(latest_data, aes(x = factor(rating))) +
+  geom_bar(fill = "#25f4ee") + 
+  labs(title = "Perceived Influence Ratings", x = "Rating (1-5)", y = "Frequency") +
+  theme_light()
+```
